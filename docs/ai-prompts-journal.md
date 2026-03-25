@@ -1,4 +1,4 @@
-# 🤖 AI Prompts Ideation Journal
+# 🤖 AI Prompts Journal
 
 This document captures how I used AI throughout the project. Not just to get answers, but to guide my learning process, especially in areas I wasn’t fully confident in yet.
 

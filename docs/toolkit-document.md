@@ -139,7 +139,7 @@ A list of products with their categories attached.
 
 💡 Full working code is in the repository.
 
-👉 Refer to: `README.md` for running and testing endpoints  
+👉 Refer to: [README](./README.md) for running and testing endpoints  
 
 ---
 
@@ -147,7 +147,7 @@ A list of products with their categories attached.
 
 Instead of embedding all prompts here, I documented them separately for clarity and depth.
 
-👉 Refer to: `ai-prompts-journal.md`
+👉 Refer to: [AI Prompt Journal](./ai-prompts-journal.md)
 
 ### What this section covers
 
@@ -167,7 +167,7 @@ It acted more like a guide when I was stuck, especially during debugging.
 
 All errors and debugging experiences are documented in detail separately.
 
-👉 Refer to: `common-errors.md`
+👉 Refer to: [Common Errors](./common-errors.md)
 
 ### Why separate this?
 
