@@ -125,6 +125,7 @@ The API allows you to:
 
 User hits:
 
+GET /api/products
 System:
 
 - Controller receives request  
