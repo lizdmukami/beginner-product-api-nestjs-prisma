@@ -1,4 +1,4 @@
-# 🛒 Beginner Product API (NestJS + Prisma)
+# 🚀 Beginner Product API (NestJS + Prisma)
 
 > A beginner-friendly REST API built with NestJS, Prisma, and PostgreSQL — created as part of the **Beginner's Toolkit with GenAI** capstone project.
 
@@ -21,10 +21,12 @@ It was built as part of a learning journey to understand how modern APIs are str
 
 | Feature | What it does |
 |---|---|
-| **Product Management** | Create and retrieve products |
+| **Product Management** | Create, retrieve, and manage products including featured items |
 | **Category Management** | Create and retrieve categories with URL-friendly slugs |
 | **Filter by Category** | Fetch all products belonging to a specific category |
+| **Admin Endpoints** | Create and update products via protected admin routes |
 | **RESTful Structure** | Follows standard HTTP API design conventions |
+| **Clean Architecture** | Controller → Service → DB pattern keeps code organised |
 | **Prisma ORM** | Handles all database queries in a clean, type-safe way |
 | **PostgreSQL Database** | Stores your data in a reliable relational database |
 | **Seed Data** | Pre-populates the database so you can test right away |
@@ -32,7 +34,7 @@ It was built as part of a learning journey to understand how modern APIs are str
 
 ---
 
-## 🛠 Technologies Used
+## 🛠️ Tech Stack
 
 - **[NestJS](https://nestjs.com/)** — A structured Node.js framework for building scalable backend apps
 - **[Prisma ORM](https://www.prisma.io/)** — A modern database toolkit that makes working with databases much easier
@@ -58,7 +60,7 @@ Before you start, make sure you have the following installed on your computer:
 
 ---
 
-## 🚀 Installation & Setup (Step by Step)
+## 🛠️ Installation & Setup (Step by Step)
 
 Follow these steps carefully. Take it one at a time — there's no rush!
 
@@ -67,7 +69,7 @@ Follow these steps carefully. Take it one at a time — there's no rush!
 Open your terminal, navigate to where you want the project to live, and run:
 
 ```bash
-git clone https://github.com/lizdmukami/beginner-product-api-nestjs-prisma.git
+git clone https://github.com/lizdmukami/beginner-product-api-nestjs-prisma
 cd beginner-product-api-nestjs-prisma
 ```
 
@@ -87,25 +89,19 @@ npm install
 
 ### Step 3 — Set Up Your Environment Variables
 
-The project needs a `.env` file to know how to connect to your database. A sample file is already provided for you.
+The project needs a `.env` file to know how to connect to your database. Create one now:
 
 ```bash
 cp .env.example .env
 ```
 
-Now open `.env` in VS Code and update the `DATABASE_URL` line with your own PostgreSQL credentials:
+Open `.env` in VS Code and set your `DATABASE_URL`:
 
 ```env
-DATABASE_URL="postgresql://YOUR_USERNAME:YOUR_PASSWORD@localhost:5432/YOUR_DATABASE_NAME"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/product_api_db"
 ```
 
-**Example:**
-
-```env
-DATABASE_URL="postgresql://postgres:mypassword@localhost:5432/product_api_db"
-```
-
-> 🔑 Replace `YOUR_USERNAME`, `YOUR_PASSWORD`, and `YOUR_DATABASE_NAME` with your actual values. Make sure there are no spaces around the `=` sign.
+> 🔑 Replace `postgres` and `password` with your actual PostgreSQL username and password. Make sure there are no spaces around the `=` sign.
 
 ---
 
@@ -133,10 +129,10 @@ CREATE DATABASE product_api_db;
 This command reads your `schema.prisma` file and creates the actual tables in your database:
 
 ```bash
-npx prisma migrate dev --name init
+npx prisma migrate dev
 ```
 
-You should see a success message confirming the migration was applied. If you ever update the schema later, run this command again with a new descriptive name.
+You should see a success message confirming the migration was applied. If you ever update the schema later, run this command again with a descriptive name like `--name add-featured-field`.
 
 ---
 
@@ -148,7 +144,7 @@ This pre-fills your database with sample products and categories so you can star
 npx ts-node prisma/seed.ts
 ```
 
-> After this step, your database will have some ready-to-use data to work with.
+> After this step, your database will have ready-to-use data to work with.
 
 ---
 
@@ -162,8 +158,8 @@ You should see output that looks something like this:
 
 ```
 [NestFactory] Starting Nest application...
-[RoutesResolver] ProductsController {/products}
-[RoutesResolver] CategoriesController {/categories}
+[RoutesResolver] ProductsController {/api/products}
+[RoutesResolver] CategoriesController {/api/categories}
 [NestApplication] Nest application successfully started
 ```
 
@@ -175,11 +171,13 @@ Your API is now running at: **`http://localhost:3000`** 🎉
 
 Use Thunder Client or Postman to test these endpoints. Make sure your server is running first!
 
+> All endpoints are prefixed with `/api`.
+
 ---
 
 ### 📦 Products
 
-#### `GET /products` — Fetch All Products
+#### `GET /api/products` — Fetch All Products
 
 **Request:** No body needed. Just hit the endpoint.
 
@@ -191,6 +189,8 @@ Use Thunder Client or Postman to test these endpoints. Make sure your server is 
     "name": "Wireless Headphones",
     "description": "Noise-cancelling over-ear headphones",
     "price": 49.99,
+    "slug": "wireless-headphones",
+    "featured": true,
     "categoryId": 1,
     "createdAt": "2025-01-01T10:00:00.000Z"
   },
@@ -199,6 +199,8 @@ Use Thunder Client or Postman to test these endpoints. Make sure your server is 
     "name": "USB-C Hub",
     "description": "7-in-1 USB-C hub for laptops",
     "price": 29.99,
+    "slug": "usb-c-hub",
+    "featured": false,
     "categoryId": 2,
     "createdAt": "2025-01-01T10:05:00.000Z"
   }
@@ -207,35 +209,51 @@ Use Thunder Client or Postman to test these endpoints. Make sure your server is 
 
 ---
 
-#### `POST /products` — Create a New Product
+#### `GET /api/products/featured` — Fetch Featured Products
 
-**Request Body:**
+Returns only products marked as featured.
+
+**Request:** No body needed.
+
+**Response:**
 ```json
-{
-  "name": "Mechanical Keyboard",
-  "description": "Compact TKL mechanical keyboard with RGB lighting",
-  "price": 75.00,
-  "categoryId": 1
-}
+[
+  {
+    "id": 1,
+    "name": "Wireless Headphones",
+    "price": 49.99,
+    "slug": "wireless-headphones",
+    "featured": true,
+    "categoryId": 1
+  }
+]
 ```
+
+---
+
+#### `GET /api/products/:slug` — Fetch a Single Product by Slug
+
+**Example:** `GET /api/products/wireless-headphones`
 
 **Response:**
 ```json
 {
-  "id": 3,
-  "name": "Mechanical Keyboard",
-  "description": "Compact TKL mechanical keyboard with RGB lighting",
-  "price": 75.00,
+  "id": 1,
+  "name": "Wireless Headphones",
+  "description": "Noise-cancelling over-ear headphones",
+  "price": 49.99,
+  "slug": "wireless-headphones",
+  "featured": true,
   "categoryId": 1,
-  "createdAt": "2025-01-01T11:00:00.000Z"
+  "createdAt": "2025-01-01T10:00:00.000Z"
 }
 ```
 
 ---
 
-### 🗂 Categories
+### 🗂️ Categories
 
-#### `GET /categories` — Fetch All Categories
+#### `GET /api/categories` — Fetch All Categories
 
 **Request:** No body needed.
 
@@ -257,32 +275,11 @@ Use Thunder Client or Postman to test these endpoints. Make sure your server is 
 
 ---
 
-#### `POST /categories` — Create a New Category
-
-**Request Body:**
-```json
-{
-  "name": "Audio",
-  "slug": "audio"
-}
-```
-
-**Response:**
-```json
-{
-  "id": 3,
-  "name": "Audio",
-  "slug": "audio"
-}
-```
-
----
-
-#### `GET /categories/:slug/products` — Get Products by Category
+#### `GET /api/categories/:slug/products` — Get Products by Category
 
 Fetch all products that belong to a specific category using its slug.
 
-**Example:** `GET /categories/electronics/products`
+**Example:** `GET /api/categories/electronics/products`
 
 **Response:**
 ```json
@@ -291,6 +288,7 @@ Fetch all products that belong to a specific category using its slug.
     "id": 1,
     "name": "Wireless Headphones",
     "price": 49.99,
+    "slug": "wireless-headphones",
     "categoryId": 1
   }
 ]
@@ -298,9 +296,68 @@ Fetch all products that belong to a specific category using its slug.
 
 ---
 
+### 🔐 Admin
+
+These endpoints are for creating and managing products. In a production app, these would be protected by authentication.
+
+#### `POST /api/admin/products` — Create a New Product
+
+**Request Body:**
+```json
+{
+  "name": "Mechanical Keyboard",
+  "description": "Compact TKL mechanical keyboard with RGB lighting",
+  "price": 75.00,
+  "slug": "mechanical-keyboard",
+  "featured": false,
+  "categoryId": 1
+}
+```
+
+**Response:**
+```json
+{
+  "id": 3,
+  "name": "Mechanical Keyboard",
+  "description": "Compact TKL mechanical keyboard with RGB lighting",
+  "price": 75.00,
+  "slug": "mechanical-keyboard",
+  "featured": false,
+  "categoryId": 1,
+  "createdAt": "2025-01-01T11:00:00.000Z"
+}
+```
+
+---
+
+#### `PATCH /api/admin/products/:id` — Update a Product
+
+**Example:** `PATCH /api/admin/products/3`
+
+**Request Body** (send only the fields you want to change):
+```json
+{
+  "price": 69.99,
+  "featured": true
+}
+```
+
+**Response:**
+```json
+{
+  "id": 3,
+  "name": "Mechanical Keyboard",
+  "price": 69.99,
+  "featured": true,
+  "categoryId": 1
+}
+```
+
+---
+
 ## 📂 Project Structure Explained
 
-Here's what each folder and file does, written in plain English:
+Here's what each folder and file does, in plain English:
 
 ```
 BEGINNER-PRODUCT-API-NESTJS-PRISMA/
@@ -318,12 +375,12 @@ BEGINNER-PRODUCT-API-NESTJS-PRISMA/
 │
 ├── src/                          # Your main application code
 │   │
-│   ├── categories/               # Everything for the /categories routes
+│   ├── categories/               # Everything for the /api/categories routes
 │   │   ├── categories.controller.ts  # Receives and responds to HTTP requests
 │   │   ├── categories.module.ts      # Wires the controller and service together
 │   │   └── categories.service.ts     # Contains the logic and talks to the DB
 │   │
-│   ├── products/                 # Everything for the /products routes
+│   ├── products/                 # Everything for the /api/products routes
 │   │   ├── products.controller.ts
 │   │   ├── products.module.ts
 │   │   └── products.service.ts
@@ -382,6 +439,22 @@ await app.listen(4000); // Change to any available port
 
 ---
 
+## 🧪 Testing Your Endpoints
+
+Once your server is running, you can test all endpoints using either of these tools:
+
+- **[Postman](https://www.postman.com/)** — A standalone desktop app for API testing
+- **[Thunder Client](https://www.thunderclient.com/)** — A lightweight extension built directly into VS Code
+
+**Quick test to confirm everything is working:**
+
+1. Start the server: `npm run start:dev`
+2. Open Postman or Thunder Client
+3. Send a `GET` request to `http://localhost:3000/api/products`
+4. You should see your seeded products returned as JSON ✅
+
+---
+
 ## 🐛 Troubleshooting
 
 Here are the most common issues beginners run into, and exactly how to fix them.
@@ -407,8 +480,8 @@ Here are the most common issues beginners run into, and exactly how to fix them.
 **Fix:**
 - Your `.env` file isn't being loaded properly.
 - Make sure the file is named exactly `.env` — not `.env.txt`, `.env copy`, or anything else.
-- Make sure `DATABASE_URL` is defined and has no spaces around the `=` sign.
-- Restart your development server after making any changes to `.env`:
+- Make sure `DATABASE_URL` is defined with no spaces around the `=` sign.
+- Restart your server after editing `.env`:
   ```bash
   npm run start:dev
   ```
@@ -433,10 +506,7 @@ npx prisma migrate reset
 
 **Error message:** `Error: listen EADDRINUSE: address already in use :::3000`
 
-**Fix:** Something else is already using port 3000. You have two options:
-
-1. Find and stop the other process, or
-2. Change your app's port in `src/main.ts`:
+**Fix:** Something else is already using port 3000. Either stop that process, or change your app's port in `src/main.ts`:
 
 ```typescript
 await app.listen(3001);
@@ -451,7 +521,7 @@ await app.listen(3001);
 **Fix:**
 - Run `cp .env.example .env` to create the file if it doesn't exist yet.
 - Open `.env` and make sure all variables are filled in with real values.
-- Never leave values as empty strings or placeholder text like `YOUR_PASSWORD`.
+- Never leave values as placeholder text like `YOUR_PASSWORD`.
 
 ---
 
@@ -501,13 +571,28 @@ git push origin feature/your-feature-name
 
 ---
 
-## 🧠 About This Capstone
+## 🧠 Learning Outcomes
 
-This project was built as part of the **Beginner's Toolkit with GenAI** capstone. The learning process involved using AI-assisted prompting throughout — from understanding NestJS module architecture, to debugging real Prisma errors, to structuring the codebase in a way that makes sense for other beginners.
+Building this project helped me understand and solidify:
 
-The goal of this toolkit is simple: **you don't have to figure it all out alone.** AI tools can help you understand concepts faster, work through errors, and write better code — as long as you also take the time to understand *why* things work the way they do.
+- **How APIs work** — the request/response cycle, HTTP methods, status codes, and what REST actually means in practice
+- **Database relationships** — how products and categories link together using foreign keys, and how Prisma makes this easy to manage
+- **Backend architecture** — why the Controller → Service → DB pattern exists, and how it keeps code clean and maintainable as a project grows
+- **Debugging real errors** — working through actual issues like Prisma connection errors, migration conflicts, and environment variable problems
+
+This project was built using AI-assisted prompting as part of the **Beginner's Toolkit with GenAI** capstone. The goal of this toolkit is simple: **you don't have to figure it all out alone.** AI tools can help you understand concepts faster, work through errors, and write better code — as long as you also take the time to understand *why* things work the way they do.
 
 If you're reading this as a fellow beginner: you can absolutely build this. Take it one step at a time. 💪
+
+---
+
+## 📚 Resources
+
+These are the official docs used throughout this project. Bookmark them — you'll come back often.
+
+- 📘 [NestJS Documentation](https://docs.nestjs.com/) — Everything about modules, controllers, services, and more
+- 📗 [Prisma Documentation](https://www.prisma.io/docs/) — Schema setup, migrations, querying, and Prisma Studio
+- 📙 [PostgreSQL Documentation](https://www.postgresql.org/docs/) — Database setup, commands, and configuration
 
 ---
 
@@ -538,6 +623,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+---
+
+## 👩‍💻 Author
+
+**Liz Mukami**
+Software Engineer | Backend & Web Development
+
+- GitHub: [@lizdmukami](https://github.com/lizdmukami)
 
 ---
 
