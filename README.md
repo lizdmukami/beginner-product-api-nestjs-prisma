@@ -185,25 +185,43 @@ Use Thunder Client or Postman to test these endpoints. Make sure your server is 
 ```json
 [
   {
-    "id": 1,
-    "name": "Wireless Headphones",
-    "description": "Noise-cancelling over-ear headphones",
-    "price": 49.99,
-    "slug": "wireless-headphones",
-    "featured": true,
+    "id": 26,
+    "name": "Bluetooth Speaker Mini",
+    "slug": "bluetooth-speaker-mini",
+    "description": "Compact speaker with clear sound.",
+    "price": "3500",
+    "imageUrl": "https://example.com/speaker.jpg",
+    "isFeatured": true,
     "categoryId": 1,
-    "createdAt": "2025-01-01T10:00:00.000Z"
+    "createdAt": "2026-03-25T07:32:38.568Z",
+    "updatedAt": "2026-03-25T07:32:38.568Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "slug": "electronics",
+      "createdAt": "2026-03-23T14:01:50.222Z",
+      "updatedAt": "2026-03-23T14:01:50.222Z"
+    }
   },
   {
-    "id": 2,
-    "name": "USB-C Hub",
-    "description": "7-in-1 USB-C hub for laptops",
-    "price": 29.99,
-    "slug": "usb-c-hub",
-    "featured": false,
-    "categoryId": 2,
-    "createdAt": "2025-01-01T10:05:00.000Z"
-  }
+    "id": 3,
+    "name": "Dell XPS 13",
+    "slug": "dell-xps-13",
+    "description": "Compact premium laptop for work and study.",
+    "price": "98000",
+    "imageUrl": "https://example.com/dell-xps-13.jpg",
+    "isFeatured": true,
+    "categoryId": 1,
+    "createdAt": "2026-03-23T14:01:50.410Z",
+    "updatedAt": "2026-03-23T14:01:50.410Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "slug": "electronics",
+      "createdAt": "2026-03-23T14:01:50.222Z",
+      "updatedAt": "2026-03-23T14:01:50.222Z"
+    }
+  },
 ]
 ```
 
@@ -238,15 +256,24 @@ Returns only products marked as featured.
 **Response:**
 ```json
 {
-  "id": 1,
-  "name": "Wireless Headphones",
-  "description": "Noise-cancelling over-ear headphones",
-  "price": 49.99,
-  "slug": "wireless-headphones",
-  "featured": true,
-  "categoryId": 1,
-  "createdAt": "2025-01-01T10:00:00.000Z"
-}
+    "id": 26,
+    "name": "Bluetooth Speaker Mini",
+    "slug": "bluetooth-speaker-mini",
+    "description": "Compact speaker with clear sound.",
+    "price": "3500",
+    "imageUrl": "https://example.com/speaker.jpg",
+    "isFeatured": true,
+    "categoryId": 1,
+    "createdAt": "2026-03-25T07:32:38.568Z",
+    "updatedAt": "2026-03-25T07:32:38.568Z",
+    "category": {
+      "id": 1,
+      "name": "Electronics",
+      "slug": "electronics",
+      "createdAt": "2026-03-23T14:01:50.222Z",
+      "updatedAt": "2026-03-23T14:01:50.222Z"
+    }
+  },
 ```
 
 ---
@@ -261,15 +288,19 @@ Returns only products marked as featured.
 ```json
 [
   {
-    "id": 1,
-    "name": "Electronics",
-    "slug": "electronics"
+    "id": 2,
+    "name": "Home & Living",
+    "slug": "home-living",
+    "createdAt": "2026-03-23T14:01:50.224Z",
+    "updatedAt": "2026-03-23T14:01:50.224Z"
   },
   {
-    "id": 2,
-    "name": "Accessories",
-    "slug": "accessories"
-  }
+    "id": 3,
+    "name": "Beauty",
+    "slug": "beauty",
+    "createdAt": "2026-03-23T14:01:50.224Z",
+    "updatedAt": "2026-03-23T14:01:50.224Z"
+  },
 ]
 ```
 
@@ -285,11 +316,25 @@ Fetch all products that belong to a specific category using its slug.
 ```json
 [
   {
-    "id": 1,
-    "name": "Wireless Headphones",
-    "price": 49.99,
-    "slug": "wireless-headphones",
-    "categoryId": 1
+  "id": 1,
+  "name": "Electronics",
+  "slug": "electronics",
+  "createdAt": "2026-03-23T14:01:50.222Z",
+  "updatedAt": "2026-03-23T14:01:50.222Z",
+  "products": [
+    {
+      "id": 2,
+      "name": "Samsung Galaxy A54",
+      "slug": "samsung-galaxy-a54",
+      "description": "Reliable Android phone for everyday use.",
+      "price": "45000",
+      "imageUrl": "https://example.com/samsung-galaxy-a54.jpg",
+      "isFeatured": false,
+      "categoryId": 1,
+      "createdAt": "2026-03-23T14:01:50.410Z",
+      "updatedAt": "2026-03-23T14:01:50.410Z"
+    },
+  ]
   }
 ]
 ```
@@ -305,11 +350,12 @@ These endpoints are for creating and managing products. In a production app, the
 **Request Body:**
 ```json
 {
-  "name": "Mechanical Keyboard",
-  "description": "Compact TKL mechanical keyboard with RGB lighting",
-  "price": 75.00,
-  "slug": "mechanical-keyboard",
-  "featured": false,
+  "name": "Wireless Earbuds Pro",
+  "slug": "wireless-earbuds-pro",
+  "description": "Noise-isolating earbuds with long battery life and clear sound.",
+  "price": 7200,
+  "imageUrl": "https://example.com/wireless-earbuds-pro.jpg",
+  "isFeatured": false,
   "categoryId": 1
 }
 ```
@@ -317,14 +363,23 @@ These endpoints are for creating and managing products. In a production app, the
 **Response:**
 ```json
 {
-  "id": 3,
-  "name": "Mechanical Keyboard",
-  "description": "Compact TKL mechanical keyboard with RGB lighting",
-  "price": 75.00,
-  "slug": "mechanical-keyboard",
-  "featured": false,
+  "id": 28,
+  "name": "Wireless Earbuds Pro",
+  "slug": "wireless-earbuds-pro",
+  "description": "Noise-isolating earbuds with long battery life and clear sound.",
+  "price": "7200",
+  "imageUrl": "https://example.com/wireless-earbuds-pro.jpg",
+  "isFeatured": false,
   "categoryId": 1,
-  "createdAt": "2025-01-01T11:00:00.000Z"
+  "createdAt": "2026-03-25T08:39:03.180Z",
+  "updatedAt": "2026-03-25T08:39:03.180Z",
+  "category": {
+    "id": 1,
+    "name": "Electronics",
+    "slug": "electronics",
+    "createdAt": "2026-03-23T14:01:50.222Z",
+    "updatedAt": "2026-03-23T14:01:50.222Z"
+  }
 }
 ```
 
@@ -332,24 +387,36 @@ These endpoints are for creating and managing products. In a production app, the
 
 #### `PATCH /api/admin/products/:id` — Update a Product
 
-**Example:** `PATCH /api/admin/products/3`
+**Example:** `PATCH /api/admin/products/1`
 
 **Request Body** (send only the fields you want to change):
 ```json
 {
-  "price": 69.99,
-  "featured": true
+  "price": 110000,
+  "isFeatured": false
 }
 ```
 
 **Response:**
 ```json
 {
-  "id": 3,
-  "name": "Mechanical Keyboard",
-  "price": 69.99,
-  "featured": true,
-  "categoryId": 1
+  "id": 1,
+  "name": "iPhone 14",
+  "slug": "iphone-14",
+  "description": "Apple smartphone with strong performance and clean design.",
+  "price": "110000",
+  "imageUrl": "https://example.com/iphone-14.jpg",
+  "isFeatured": false,
+  "categoryId": 1,
+  "createdAt": "2026-03-23T14:01:50.410Z",
+  "updatedAt": "2026-03-25T07:33:59.012Z",
+  "category": {
+    "id": 1,
+    "name": "Electronics",
+    "slug": "electronics",
+    "createdAt": "2026-03-23T14:01:50.222Z",
+    "updatedAt": "2026-03-23T14:01:50.222Z"
+  }
 }
 ```
 
