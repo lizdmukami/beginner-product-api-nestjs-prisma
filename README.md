@@ -1,3 +1,17 @@
+📘 Project Documentation
+
+All supporting documentation for this project is organized below:
+
+📖 Toolkit Document
+→ docs/toolkit.md
+🤖 AI Prompts Journal
+→ docs/ai-prompts-journal.md
+⚠️ Common Errors & Fixes
+→ docs/common-errors.md
+
+💡 These documents explain the learning process, setup, debugging, and how AI was used throughout the project.
+
+
 # 🚀 Beginner Product API (NestJS + Prisma)
 
 > A beginner-friendly REST API built with NestJS, Prisma, and PostgreSQL — created as part of the **Beginner's Toolkit with GenAI** capstone project.

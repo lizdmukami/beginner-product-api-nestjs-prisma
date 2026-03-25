@@ -79,7 +79,7 @@ Before starting, ensure you have:
 This section focuses on the flow, not every command detail.  
 Full commands and scripts are available in the README.
 
-👉 Refer to: `README.md`
+👉 Refer to: [README](../README.md)
 
 ### Step-by-step overview
 
@@ -100,7 +100,7 @@ At this point:
 
 If anything breaks here, check the Common Errors document.
 
-👉 Refer to: `common-errors.md`
+👉 Refer to: [Common Errors](./common-errors.md)
 
 ---
 
@@ -139,7 +139,7 @@ A list of products with their categories attached.
 
 💡 Full working code is in the repository.
 
-👉 Refer to: [README](./README.md) for running and testing endpoints  
+👉 Refer to: [README](../README.md) for running and testing endpoints  
 
 ---
 
